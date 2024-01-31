@@ -21,16 +21,14 @@ class PracticeController extends Controller
             'from' => 'required|date',
             'to' => 'required|date|after:from',
             'company_employee_id' => 'required|integer|not_in:0|exists:company_employees,id',
-            'program_id' => 'required|integer|not_in:0|exists:programs,id',
-            'contract' => ["nullable",File::types(['docx', 'pdf'])],
+            'contract' => ["nullable",File::types(['pdf', 'docx'])],
 
         ]);
         $newPractice = new Practice();
-        $newPractice->practice_status_id = PracticeStatus::firstWhere("status", "Neschválená")->id;
+        $newPractice->practice_status_id = PracticeStatus::firstWhere("status", "Vypísaná")->id;
         $newPractice->from = $validated['from'];
         $newPractice->to = $validated['to'];
         $newPractice->company_employee_id = $validated['company_employee_id'];
-        $newPractice->program_id = $validated['program_id'];
         $newPractice->user_id = auth()->id();
 
         if ($request->hasFile('contract')){
@@ -95,8 +93,7 @@ class PracticeController extends Controller
              'from' => 'date',
              'to' => 'date|after:from',
              'company_employee_id' => 'integer|not_in:0',
-             'program_id' => 'integer|not_in:0|exists:programs,id',
-             'contract' => ["nullable",File::types(['docx', 'pdf'])],
+             'contract' => ["nullable",File::types(['pdf', 'docx'])],
              'practice_status_id' => 'integer|exists:practice_statuses,id'
          ]);
 
@@ -107,7 +104,7 @@ class PracticeController extends Controller
             if($request->has('practice_status_id')) {
                 $practice->practice_status_id = $request["practice_status_id"];
             } else {
-                return response("Cannot change practice status", 403);
+                return response("Nie je možné zmeniť stav praxe", 403);
             }
         }
 
@@ -135,7 +132,7 @@ class PracticeController extends Controller
         $practice->delete();
 
         return response()->json([
-            'message' => 'Practice deleted successfully.',
+            'message' => 'Úspešne odstránená prax.',
         ]);
     }
 
@@ -232,6 +229,7 @@ class PracticeController extends Controller
 
         return Storage::download('completionConfirmations/'.$practice->completion_confirmation);
     }
+
     public function restore(Practice $practice){
         $practice->restore();
         return response()->json(['message' => 'Úspešne obnovený záznam']);
@@ -241,9 +239,10 @@ class PracticeController extends Controller
     {
         $practice->forceDelete();
         return response()->json([
-            'message' => 'úspešne odstránený záznam',
+            'message' => 'Úspešne odstránený záznam',
         ]);
     }
+
     public function indexDeleted()
     {
         $practices = Practice::onlyTrashed()->paginate(20);
@@ -256,6 +255,4 @@ class PracticeController extends Controller
             'total' => $practices->total()
         ]);
     }
-
-
 }

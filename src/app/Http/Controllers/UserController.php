@@ -22,7 +22,7 @@ class UserController extends Controller
 {
     public function index()
     {
-            $users = User::paginate(20);
+        $users = User::paginate(20);
 
         return response([
             'items' => $users->items(),
@@ -32,6 +32,7 @@ class UserController extends Controller
             'total' => $users->total()
         ]);
     }
+
     public function indexDeleted()
     {
         $users = User::onlyTrashed()->paginate(20);
@@ -44,6 +45,7 @@ class UserController extends Controller
             'total' => $users->total()
         ]);
     }
+
     public function register(Request $request)
     {
         $fields = $request->validate([
@@ -205,7 +207,7 @@ class UserController extends Controller
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
-                'message' => 'Incorrect credentials'
+                'message' => 'Wrong credentials'
             ], 401);
         }
 
@@ -310,7 +312,7 @@ class UserController extends Controller
         auth()->user()->tokens()->delete();
 
         return [
-            'message' => 'Logged out'
+            'message' => 'Odhlásený'
         ];
     }
 
@@ -373,7 +375,7 @@ class UserController extends Controller
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
-                'message' => 'Incorrect credentials'
+                'message' => 'Wrong credentials'
             ], 401);
         }
 
@@ -416,11 +418,11 @@ class UserController extends Controller
     public function forceDelete(User $user)
     {
                 if($user->id === auth()->user()->id) {
-                    return response("Cant delete yourself");
+                    return response("Nie je možné odstrániť");
                 }
                 $user->forceDelete();
                 return response()->json([
-                    'message' => 'úspešne odstránený záznam',
+                    'message' => 'Úspešne odstránený záznam',
                 ]);
     }
 
@@ -466,7 +468,7 @@ class UserController extends Controller
                 return response($user);
             }else{
                 if (isset($fields['role_id'])){
-                    return response('Cannot change role', 400);
+                    return response('Nie je možné zmeniť rolu', 400);
                 }
 
                 $this->updateUser($user,$validate,$userRole);
@@ -476,7 +478,7 @@ class UserController extends Controller
 
         if (auth()->user()->id === $user->id) {
             if (isset($fields['role_id'])){
-                return response('Cannot change role', 400);
+                return response('Nie je možné zmeniť rolu', 400);
             }
             else {
                 $validate = $request->validate([

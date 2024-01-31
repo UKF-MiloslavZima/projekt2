@@ -83,7 +83,7 @@ class FeedbackController extends Controller
     {
         $feedback->forceDelete();
         return response()->json([
-            'message' => 'úspešne odstránený záznam',
+            'message' => 'Úspešne odstránený záznam',
         ]);
     }
     public function indexDeleted()
