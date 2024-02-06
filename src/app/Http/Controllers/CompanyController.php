@@ -27,22 +27,22 @@ class CompanyController extends Controller
                 return response("Forbidden", 403);
             }
         }
+
         $validatedData = $request->validate([
-            'ICO' => 'integer',
             'name' => 'string',
             'city' => 'string',
-            'zip_code' => 'string',
-            'phone' => 'string',
-            'email' => 'email|string',
             'street' => 'string',
             'house_number' => 'string',
+            'zip_code' => 'string',
+            'phone' => 'string',
+            'email' => 'email|string'
         ]);
+
         $company->fill($validatedData);
         $company->save();
 
         return response()->json($company);
     }
-
 
     public function show(Company $company)
     {
@@ -52,15 +52,15 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'ICO' => 'required|integer',
             'name' => 'required|string',
             'city' => 'required|string',
-            'zip_code' => 'required|string',
-            'phone' => 'required|string',
-            'email' => 'required|email|string',
             'street' => 'required|string',
             'house_number' => 'required|string',
+            'zip_code' => 'required|string',
+            'phone' => 'required|string',
+            'email' => 'required|email|string'
         ]);
+
         $company = Company::create($validatedData);
 
         return response()->json($company,201);
@@ -70,10 +70,9 @@ class CompanyController extends Controller
     {
         $company->delete();
 
-        return response()->json([
-            'message' => 'Company deleted successfully.',
-        ]);
+        return response()->json(['message' => 'Úspešne odstránený záznam']);
     }
+
     public function restore(Company $company){
         $company->restore();
         return response()->json(['message' => 'Úspešne obnovený záznam']);
@@ -82,10 +81,9 @@ class CompanyController extends Controller
     public function forceDelete(Company $company)
     {
         $company->forceDelete();
-        return response()->json([
-            'message' => 'úspešne odstránený záznam',
-        ]);
+        return response()->json(['message' => 'Úspešne odstránený záznam']);
     }
+
     public function indexDeleted()
     {
         $companies = Company::onlyTrashed()->paginate(20);

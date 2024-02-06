@@ -40,9 +40,7 @@ class PracticeController extends Controller
 
         $newPractice->save();
 
-        return response()->json([
-            "saved practice_id" => $newPractice->id
-        ]);
+        return response()->json(["saved practice_id" => $newPractice->id]);
     }
 
     public function index()
@@ -112,7 +110,7 @@ class PracticeController extends Controller
             Storage::delete('contracts/'.$practice->contract);
             $file = $request->file('contract');
             $filename = uniqid().'_'.$file->getClientOriginalName();
-            Storage::putFileAs('contracts',$file,$filename);         //ubuntu cmd: sudo chmod -R 777 storage
+            Storage::putFileAs('contracts',$file,$filename);//sudo chmod -R 777 storage
             $practice->contract = $filename;
         }
 
@@ -141,13 +139,11 @@ class PracticeController extends Controller
         if(auth()->user()->role->role === "Študent") {
             if($practice->user_id === auth()->id()) {
                 if (!empty($practice->contract)) return Storage::download('contracts/'.$practice->contract);
-                else return response()->json([
-                    'message' => 'Practice does not have contract.']);
+                else return response()->json(['message' => 'Prax nemá zmluvu']);
             } else return response ("Forbidden", 403);
         }else {
             if (!empty($practice->contract)) return Storage::download('contracts/'.$practice->contract);
-            else return response()->json([
-                'message' => 'Practice does not have contract.']);
+            else return response()->json(['message' => 'Prax nemá zmluvu']);
         }
     }
 
@@ -238,9 +234,7 @@ class PracticeController extends Controller
     public function forceDelete(Practice $practice)
     {
         $practice->forceDelete();
-        return response()->json([
-            'message' => 'Úspešne odstránený záznam',
-        ]);
+        return response()->json(['message' => 'Úspešne odstránený záznam']);
     }
 
     public function indexDeleted()

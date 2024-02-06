@@ -55,6 +55,7 @@ class FeedbackController extends Controller
                 return response("Forbidden", 403);
             }
         }
+
         $validatedData = $request->validate([
             'body' => 'required|string',
         ]);
@@ -72,8 +73,9 @@ class FeedbackController extends Controller
             }
         }
         $feedback->delete();
-        return response()->json(['message' => 'Feedback deleted successfully.']);
+        return response()->json(['message' => 'Úspešne odstránený záznam']);
     }
+
     public function restore(Feedback $feedback){
         $feedback->restore();
         return response()->json(['message' => 'Úspešne obnovený záznam']);
@@ -82,10 +84,9 @@ class FeedbackController extends Controller
     public function forceDelete(Feedback $feedback)
     {
         $feedback->forceDelete();
-        return response()->json([
-            'message' => 'Úspešne odstránený záznam',
-        ]);
+        return response()->json(['message' => 'Úspešne odstránený záznam']);
     }
+
     public function indexDeleted()
     {
         $feedbacks = Feedback::onlyTrashed()->paginate(20);
